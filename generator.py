@@ -3,7 +3,7 @@ from tensorflow.python.ops import tensor_array_ops, control_flow_ops
 
 
 class Generator(object):
-    def __init__(self, num_emb, batch_size, emb_dim, hidden_dim,
+    def __init__(self, num_emb, batch_size, emb_dim, hidden_dim, # num_emb is vocab_size
                  sequence_length, start_token,
                  learning_rate=0.01, reward_gamma=0.95):
         self.num_emb = num_emb
@@ -121,7 +121,7 @@ class Generator(object):
         outputs = sess.run(self.gen_x)
         return outputs
 
-    def pretrain_step(self, sess, x):
+    def pretrain_step(self, sess, x): # train
         outputs = sess.run([self.pretrain_updates, self.pretrain_loss], feed_dict={self.x: x})
         return outputs
 
