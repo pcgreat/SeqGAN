@@ -1,13 +1,11 @@
-import pdb
-
 import numpy as np
 import tensorflow as tf
 import random
-from dataloader import Gen_Data_loader, Dis_dataloader
-from generator import Generator
-from discriminator import Discriminator
-from rollout import ROLLOUT
-from target_lstm import TARGET_LSTM
+from Barebone.dataloader import Gen_Data_loader, Dis_dataloader
+from Barebone.generator import Generator
+from Barebone.discriminator import Discriminator
+from Barebone.rollout import ROLLOUT
+from Barebone.target_lstm import TARGET_LSTM
 import _pickle as cPickle
 
 #########################################################################################
