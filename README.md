@@ -1,9 +1,16 @@
-# SeqGAN
+# SeqGAN (forked)
+
+## Highlights
+* Use tensorflow's LSTM api to replace with the original implementation (more readable)
+    * Since Tensorflow's BasicLSTM cell is fast but simple, it won't have as much variables as the original implementation's LSTM.
+    * Given the same variable size, the TF LSTM is better than the original implementation's.
+* Use maxtrix manipulation for pretrain, which is **8 times faster** than the original recursive implementation (`TfInternal/sequence_gan.py` compared to `Barebone/sequence_gan.py`)
+* (Future) Use real text for experiment
 
 ## Requirements: 
-* **Tensorflow r1.0.1**
-* Python 2.7
-* CUDA 7.5+ (For GPU)
+* **Tensorflow r1.8**
+* Python 3
+* CUDA 9 (For GPU)
 
 ## Introduction
 Apply Generative Adversarial Nets to generating sequences of discrete tokens.

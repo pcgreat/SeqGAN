@@ -110,6 +110,7 @@ def main():
     log.write('pre-training...\n')
     for epoch in range(PRE_EPOCH_NUM):
         loss = pre_train_epoch(sess, generator, gen_data_loader)
+        print("epoch %s: train loss: %s" % (epoch, loss))
         if epoch % 5 == 0:
             generate_samples(sess, generator, BATCH_SIZE, generated_num, eval_file)
             likelihood_data_loader.create_batches(eval_file)
