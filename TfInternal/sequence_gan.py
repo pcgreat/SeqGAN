@@ -94,6 +94,7 @@ def main():
 
     discriminator = Discriminator(sequence_length=20, num_classes=2, vocab_size=vocab_size, embedding_size=dis_embedding_dim, 
                                 filter_sizes=dis_filter_sizes, num_filters=dis_num_filters, l2_reg_lambda=dis_l2_reg_lambda)
+    rollout = ROLLOUT(generator, 0.8)
 
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
@@ -135,7 +136,6 @@ def main():
                 }
                 _ = sess.run(discriminator.train_op, feed)
 
-    rollout = ROLLOUT(generator, 0.8)
 
     print('#########################################################################')
     print('Start Adversarial Training...')
@@ -158,7 +158,7 @@ def main():
             log.write(buffer)
 
         # Update roll-out parameters
-        rollout.update_params()
+        rollout.update_params(sess)
 
         # Train the discriminator
         for _ in range(5):
