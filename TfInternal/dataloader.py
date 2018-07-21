@@ -1,23 +1,38 @@
+import os
+import random
+
 import numpy as np
+
+PAD_idx = 0
+
+
+def pad_seq(tokens, length):
+    tokens = tokens[:length]
+    tokens = tokens + [PAD_idx] * (length - len(tokens))
+    assert len(tokens) == length
+    return tokens
 
 
 class Gen_Data_loader():
-    def __init__(self, batch_size):
+    def __init__(self, batch_size, length):
         self.batch_size = batch_size
         self.token_stream = []
+        self.length = length
 
     def create_batches(self, data_file):
-        self.token_stream = []
+        token_stream = []
+
+        assert os.path.isfile(data_file), "file doesn't exist: %s" % data_file
         with open(data_file, 'r') as f:
             for line in f:
                 line = line.strip()
                 line = line.split()
                 parse_line = [int(x) for x in line]
-                if len(parse_line) == 20:
-                    self.token_stream.append(parse_line)
+                parse_line = pad_seq(parse_line, self.length)
+                token_stream.append(parse_line)
 
-        self.num_batch = int(len(self.token_stream) / self.batch_size)
-        self.token_stream = self.token_stream[:self.num_batch * self.batch_size]
+        self.num_batch = int(len(token_stream) / self.batch_size)
+        self.token_stream = token_stream[:self.num_batch * self.batch_size]
         self.sequence_batch = np.split(np.array(self.token_stream), self.num_batch, 0)
         self.pointer = 0
 
@@ -31,28 +46,35 @@ class Gen_Data_loader():
 
 
 class Dis_dataloader():
-    def __init__(self, batch_size):
+    def __init__(self, batch_size, length):
         self.batch_size = batch_size
         self.sentences = np.array([])
         self.labels = np.array([])
+        self.length = length
 
     def load_train_data(self, positive_file, negative_file):
         # Load data
         positive_examples = []
         negative_examples = []
+
+        assert os.path.isfile(positive_file), "file doesn't exist: %s" % positive_file
+        assert os.path.isfile(negative_file), "file doesn't exist: %s" % negative_file
+
         with open(positive_file)as fin:
             for line in fin:
                 line = line.strip()
                 line = line.split()
                 parse_line = [int(x) for x in line]
+                parse_line = pad_seq(parse_line, self.length)
                 positive_examples.append(parse_line)
         with open(negative_file)as fin:
             for line in fin:
                 line = line.strip()
                 line = line.split()
                 parse_line = [int(x) for x in line]
-                if len(parse_line) == 20:
-                    negative_examples.append(parse_line)
+                parse_line = pad_seq(parse_line, self.length)
+                negative_examples.append(parse_line)
+        positive_examples = random.sample(positive_examples, 10000)
         self.sentences = np.array(positive_examples + negative_examples)
 
         # Generate labels
@@ -74,7 +96,6 @@ class Dis_dataloader():
 
         self.pointer = 0
 
-
     def next_batch(self):
         ret = self.sentences_batches[self.pointer], self.labels_batches[self.pointer]
         self.pointer = (self.pointer + 1) % self.num_batch
@@ -82,4 +103,3 @@ class Dis_dataloader():
 
     def reset_pointer(self):
         self.pointer = 0
-
