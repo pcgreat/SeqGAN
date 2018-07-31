@@ -1,10 +1,10 @@
 import pickle
-data_Name = "cotra"
+data_Name = "essay"
 vocab_file = "vocab_" + data_Name + ".pkl"
 
 word, vocab = pickle.load(open('data/'+vocab_file,"rb"))
 print(len(word))
-input_file = 'save/coco_191.txt'
+input_file = 'save/coco_150.txt'
 # input_file = 'save/coco_451.txt'
 output_file = 'speech/' + data_Name + '_' + input_file.split('_')[-1]
 with open(output_file, 'w')as fout:

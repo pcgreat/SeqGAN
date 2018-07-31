@@ -134,9 +134,14 @@ class Generator(object):
         return outputs
 
     def pretrain_step_eval(self, sess, x):
-        outputs = sess.run([self.g_loss, self.pretrain_loss],
+        pretrain_loss = sess.run(self.pretrain_loss,
                            feed_dict={self.x: x})
-        return outputs
+        return pretrain_loss
+
+    def step_eval(self, sess, x, rewards):
+        g_loss, pretrain_loss = sess.run([self.g_loss, self.pretrain_loss],
+                           feed_dict={self.x: x, self.rewards: rewards})
+        return g_loss, pretrain_loss
 
     def init_vector(self, shape):
         return tf.zeros(shape)

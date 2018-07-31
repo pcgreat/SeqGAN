@@ -125,6 +125,11 @@ class Generator(object):
         outputs = sess.run([self.pretrain_updates, self.pretrain_loss], feed_dict={self.x: x})
         return outputs
 
+    def pretrain_step_eval(self, sess, x):
+        pretrain_loss = sess.run(self.pretrain_loss,
+                           feed_dict={self.x: x})
+        return pretrain_loss
+
     def init_matrix(self, shape):
         return tf.random_normal(shape, stddev=0.1)
 
